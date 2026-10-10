@@ -1,0 +1,10 @@
+.venv/
+.venv_converter/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+dataset/
+currency_dataset_source/
+currency_cnn*.h5
+currency_mobilenet*.h5

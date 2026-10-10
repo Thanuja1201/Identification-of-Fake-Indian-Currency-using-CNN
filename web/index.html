@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0a1020">
+    <title>Fake Indian Currency Detection | CNN</title>
+    <meta name="description" content="Educational Indian currency image classification demo using a trained MobileNetV2 model.">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <header class="topbar">
+        <a href="#" class="brand">
+            <span class="logo">₹</span>
+            <span>Currency<span class="cyan">AI</span></span>
+        </a>
+
+        <div class="pill">
+            <i></i>
+            <span id="modelStatus">Loading trained model...</span>
+        </div>
+    </header>
+
+    <main class="wrap">
+        <section class="hero">
+            <div class="eyebrow">COMPUTER VISION · DEEP LEARNING</div>
+
+            <h1>Indian Currency<br>
+                <span>Authenticity Analysis</span>
+            </h1>
+
+            <p>
+                Upload an image of an Indian currency note to see how the
+                trained image-classification model categorizes it.
+            </p>
+
+            <div class="warning">
+                <b>IMPORTANT</b>
+                <span>
+                    This is an educational project, not a certified counterfeit
+                    detection system. Do not use its prediction as proof that
+                    a banknote is genuine or fake.
+                </span>
+            </div>
+        </section>
+
+        <section class="grid">
+            <!-- Image upload panel -->
+            <article class="panel">
+                <div class="panel-title">
+                    <span class="num">01</span>
+                    <h2>Upload Currency Image</h2>
+                    <span class="meta">JPG · PNG · WEBP</span>
+                </div>
+
+                <label class="dropzone" id="dropzone" for="fileInput">
+                    <input
+                        type="file"
+                        id="fileInput"
+                        accept="image/jpeg,image/png,image/webp"
+                    >
+
+                    <span class="upload-icon">↑</span>
+                    <b>Drop your image here</b>
+                    <small>or click to browse your computer</small>
+                    <span class="outline-btn">Choose Image</span>
+                    <small>Maximum file size: 10 MB</small>
+                </label>
+
+                <div id="previewBox" class="preview hidden">
+                    <img id="previewImg" alt="Selected currency image">
+
+                    <div class="filebar">
+                        <span id="filename">Selected image</span>
+                        <button type="button" class="link-btn" id="removeBtn">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+
+                <div class="samples">
+                    <p>DEMO SAMPLES</p>
+
+                    <div class="sample-buttons">
+                        <button
+                            type="button"
+                            class="sample-btn"
+                            data-sample="real_sample.jpg"
+                        >
+                            Real-note sample
+                            <span>Load example image</span>
+                        </button>
+
+                        <button
+                            type="button"
+                            class="sample-btn"
+                            data-sample="fake_sample.jpg"
+                        >
+                            Fake-note sample
+                            <span>Load example image</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="button" class="primary" id="checkBtn" disabled>
+                    <span>Analyze Image</span>
+                    <span>→</span>
+                </button>
+
+                <small class="privacy">
+                    The selected image is processed in your browser after the
+                    model loads. This demo does not verify official security
+                    features of banknotes.
+                </small>
+            </article>
+
+            <!-- Prediction panel -->
+            <article class="panel">
+                <div class="panel-title">
+                    <span class="num">02</span>
+                    <h2>Prediction Result</h2>
+                    <span class="meta">MODEL ANALYSIS</span>
+                </div>
+
+                <div id="emptyState" class="empty">
+                    <div class="illustration">
+                        ₹
+                        <i></i>
+                    </div>
+
+                    <h3>Ready to analyze</h3>
+                    <p>
+                        Select a currency image, then click Analyze Image
+                        to display the model's prediction and score.
+                    </p>
+                </div>
+
+                <div id="resultState" class="result hidden">
+                    <div class="info-icon">✓</div>
+                    <small>ANALYSIS RESULT</small>
+
+                    <div class="speedometer">
+                        <svg
+                            viewBox="0 0 200 125"
+                            role="img"
+                            aria-label="Model score gauge"
+                        >
+                            <path
+                                class="gauge-track"
+                                d="M 25 100 A 75 75 0 0 1 175 100"
+                            ></path>
+
+                            <path
+                                id="gaugeProgress"
+                                class="gauge-progress"
+                                d="M 25 100 A 75 75 0 0 1 175 100"
+                            ></path>
+
+                            <text
+                                id="gaugeNumber"
+                                class="gauge-number"
+                                x="100"
+                                y="84"
+                            >0%</text>
+
+                            <text
+                                class="gauge-caption"
+                                x="100"
+                                y="108"
+                            >MODEL SCORE</text>
+                        </svg>
+
+                        <div
+                            id="gaugeLabel"
+                            class="gauge-label"
+                            aria-live="polite"
+                        >PENDING</div>
+
+                        <div
+                            id="gaugePercentage"
+                            class="gauge-percentage"
+                        >0.00%</div>
+
+                        <p class="gauge-note">
+                            This is an uncalibrated model score, not a verified
+                            probability of banknote authenticity.
+                        </p>
+                    </div>
+
+                    <h3 id="resultTitle">Waiting for analysis</h3>
+
+                    <p id="resultText">
+                        Upload an image to begin.
+                    </p>
+
+                    <div class="metric">
+                        <span>Model status</span>
+                        <b id="predictionModelStatus">Loaded</b>
+                    </div>
+
+                    <div class="metric">
+                        <span>Test dataset accuracy</span>
+                        <b>84.11%</b>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <section class="features">
+            <article>
+                <span>01</span>
+                <div>
+                    <b>Image Processing</b>
+                    <p>
+                        Resizes the selected image to the model's
+                        expected 128 × 128 input size.
+                    </p>
+                </div>
+            </article>
+
+            <article>
+                <span>02</span>
+                <div>
+                    <b>MobileNetV2 Model</b>
+                    <p>
+                        Uses a trained image-classification model
+                        converted for browser inference.
+                    </p>
+                </div>
+            </article>
+
+            <article>
+                <span>03</span>
+                <div>
+                    <b>Instant Visualization</b>
+                    <p>
+                        Displays the predicted class and the model's
+                        score for that prediction.
+                    </p>
+                </div>
+            </article>
+        </section>
+
+        <div class="disclaimer">
+            <b>NOTE</b>
+            <p>
+                Test accuracy describes performance on a particular test
+                dataset. Results may differ on new images, lighting conditions,
+                note denominations, and unrelated images. For real currency
+                verification, consult official bank guidance.
+            </p>
+        </div>
+
+        <footer>
+            <span>Indian Currency Classification · Academic Project</span>
+            <span>MobileNetV2 · TensorFlow.js</span>
+        </footer>
+    </main>
+
+    <!-- TensorFlow.js must load before script.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
