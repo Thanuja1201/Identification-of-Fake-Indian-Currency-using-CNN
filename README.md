@@ -33,3 +33,14 @@ Use only traceable, correctly labelled ₹500 images. Keep test images separate 
 PyTorch `.pt` files cannot be loaded directly by TensorFlow.js. The model must be converted/exported to a compatible format, and preprocessing/output class order must match training before enabling predictions. The current UI intentionally reports demo status only.
 
 This educational interface is not an official banknote authentication tool.
+
+## 📸 Website Preview
+
+### Preview 1
+![Project Preview 1](screenshots/preview1.png)
+
+### Preview 2
+![Project Preview 2](screenshots/preview2.png)
+
+### Preview 3
+![Project Preview 3](screenshots/preview3.png)
